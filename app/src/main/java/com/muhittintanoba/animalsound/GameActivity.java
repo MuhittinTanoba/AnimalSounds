@@ -1,8 +1,11 @@
 package com.muhittintanoba.animalsound;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -19,6 +22,7 @@ public class GameActivity extends AppCompatActivity {
     ImageView image1, image2, image3, image4;
     MediaPlayer music;
     TextView scoreText;
+    TextView bestScoreText;
 
     int[] animalVoices = {R.raw.dog, R.raw.cat, R.raw.bird, R.raw.bear, R.raw.cow, R.raw.chick,
             R.raw.chicken, R.raw.donkey, R.raw.duck, R.raw.elephant, R.raw.frog, R.raw.goat,
@@ -32,11 +36,21 @@ public class GameActivity extends AppCompatActivity {
 
     int randomVoice, randomForFirst, randomForSecond, randomForThird, randomForFourth;
 
+    SharedPreferences sharedPreferences;
+    int bestScore;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+        scoreText = (TextView) findViewById(R.id.scoreText);
+        bestScoreText = (TextView) findViewById(R.id.bestScoreText);
+
+        sharedPreferences= this.getSharedPreferences("com.muhittintanoba.animalsound", Context.MODE_PRIVATE);
+        bestScore = sharedPreferences.getInt("bestScore", 0);
+        bestScoreText.setText("Best Score: " + bestScore);
+
 
         image1 = (ImageView) findViewById(R.id.image1);
         image2 = (ImageView) findViewById(R.id.image2);
@@ -46,8 +60,10 @@ public class GameActivity extends AppCompatActivity {
         changeImage();
         changeSound();
 
-        scoreText = (TextView) findViewById(R.id.scoreText);
+    }
 
+    public void save(View view){
+        sharedPreferences.edit().putInt("bestScore", score).apply();
     }
 
     public void changeImage(){
@@ -82,7 +98,6 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void playSound(View view){
-        System.out.println(playedSounds);
         music.start();
     }
 
@@ -90,6 +105,13 @@ public class GameActivity extends AppCompatActivity {
         if(randomVoice == index){
             score += 1;
             scoreText.setText("Score: "+ score);
+
+            if(bestScore<=score) {
+                bestScore = score;
+                sharedPreferences.edit().putInt("bestScore", bestScore).apply();
+                bestScoreText.setText("Best Score: " + bestScore);
+            };
+
             if(playedSounds.size() < 10){
                 playedSounds.add(index);
             }else{
@@ -104,7 +126,8 @@ public class GameActivity extends AppCompatActivity {
         }
     }
 
-    public boolean checkArray(int first,int second,int third,int fourth, List<Integer> array){
+
+    public boolean checkArray(int first, int second, int third, int fourth, @NonNull List<Integer> array){
         if(array.contains(first)
                 || array.contains(second)
                 || array.contains(third)
@@ -130,5 +153,7 @@ public class GameActivity extends AppCompatActivity {
     public void clickedFourthImage(View view){
         checkVoice(randomForFourth);
     }
+
+
 
     }
