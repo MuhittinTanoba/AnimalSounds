@@ -2,11 +2,26 @@
     <color name="bgcolor">#8DC540</color>
     <color name="darkBlue">#328EB0</color>
 
+    /// Menu
     <string name="app_name">Animal Sound</string>
     <string name="play_button">PLAY</string>
+
+    /// Game Page
     <string name="play_sound">Play the Sound</string>
     <string name="score_text">Score: 0</string>
     <string name="best_score_text">Best Score:</string>
     <string name="guess_text">Guess animal sounds</string>
 
+    /// Welcome Screen
+    <string name="first_slide_title">First</string>
+    <string name="second_slide_title">Second</string>
+    <string name="third_slide_title">Third</string>
+    <string name="fourth_slide_title">Fourth</string>
+    <string name="lets_get_started">Lets Get Started</string>
+    <string name="first_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
+    <string name="second_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
+    <string name="third_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
+    <string name="fourth_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
+
+    <string name="skit_btn">Skip</string>
 </resources>

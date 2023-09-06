@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.view.View;
@@ -23,6 +27,8 @@ public class GameActivity extends AppCompatActivity {
     MediaPlayer music;
     TextView scoreText;
     TextView bestScoreText;
+    Bitmap myBitmap;
+
 
     int[] animalVoices = {R.raw.dog, R.raw.cat, R.raw.bird, R.raw.bear, R.raw.cow, R.raw.chick,
             R.raw.chicken, R.raw.donkey, R.raw.duck, R.raw.elephant, R.raw.frog, R.raw.goat,
@@ -38,6 +44,7 @@ public class GameActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     int bestScore;
+    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -80,10 +87,33 @@ public class GameActivity extends AppCompatActivity {
                 randomForFourth == randomForFirst ||
         checkArray(randomForFirst, randomForSecond, randomForThird, randomForFourth, playedSounds));
 
-        image1.setImageResource(animalImages[randomForFirst]);
-        image2.setImageResource(animalImages[randomForSecond]);
-        image3.setImageResource(animalImages[randomForThird]);
-        image4.setImageResource(animalImages[randomForFourth]);
+        image1.setImageBitmap(convertToBitmap(animalImages[randomForFirst]));
+        image2.setImageBitmap(convertToBitmap(animalImages[randomForSecond]));
+        image3.setImageBitmap(convertToBitmap(animalImages[randomForThird]));
+        image4.setImageBitmap(convertToBitmap(animalImages[randomForFourth]));
+
+
+    }
+
+    public Bitmap convertToBitmap(int image){
+        Bitmap bitmapImage = BitmapFactory.decodeResource(getResources(),image);
+        return resizeImage(bitmapImage, 100);
+    }
+    public Bitmap resizeImage (Bitmap image, int maximumSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+
+        float bitMapRatio = width/height;
+
+        if(bitMapRatio > 1) {
+            width = maximumSize;
+            height = (int) (width / bitMapRatio);
+        }else {
+            height = maximumSize;
+            width = (int) (height * bitMapRatio);
+        }
+
+        return image.createScaledBitmap(image, width, 100, true);
     }
 
     public void changeSound(){
