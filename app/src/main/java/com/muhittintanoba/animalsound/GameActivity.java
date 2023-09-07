@@ -38,6 +38,7 @@ public class GameActivity extends AppCompatActivity {
     MediaPlayer music;
     TextView scoreText;
     TextView bestScoreText;
+    int adHealth = 0;
     private InterstitialAd mInterstitialAd;
 
 
@@ -61,9 +62,8 @@ public class GameActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
 
-
-
-
+        initAdmob();
+        loadIntersititial();
 
         scoreText = (TextView) findViewById(R.id.scoreText);
         bestScoreText = (TextView) findViewById(R.id.bestScoreText);
@@ -80,9 +80,69 @@ public class GameActivity extends AppCompatActivity {
 
         changeImage();
         changeSound();
+        if (mInterstitialAd != null) {
+            mInterstitialAd.show(GameActivity.this);
+        } else {
+            Log.d("TAG", "The interstitial ad wasn't ready yet.");
+        }
 
     }
 
+    public void initAdmob(){
+        MobileAds.initialize(getApplicationContext(), new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(@NonNull InitializationStatus initializationStatus) {
+                Log.i("Admob","onInitializationComplete");
+            }
+        });
+
+    }
+    public void loadIntersititial() {
+
+        AdRequest adRequest = new AdRequest.Builder().build();
+
+        InterstitialAd.load(getApplicationContext(), "ca-app-pub-3940256099942544/1033173712", adRequest,
+                new InterstitialAdLoadCallback() {
+                    @Override
+                    public void onAdLoaded(@NonNull InterstitialAd interstitialAd) {
+                        super.onAdLoaded(interstitialAd);
+                        Log.i("Admob", "onAdLoaded");
+                        mInterstitialAd = interstitialAd;
+                    }
+
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
+                        Log.i("Admob", loadAdError.toString());
+                        mInterstitialAd = null;
+                    }
+                });
+        if (mInterstitialAd != null) {
+            mInterstitialAd.setFullScreenContentCallback(new FullScreenContentCallback(){
+
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent();
+                    Log.d("Admob", "Ad dismissed fullscreen content.");
+                    mInterstitialAd = null;
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(AdError adError) {
+                    super.onAdFailedToShowFullScreenContent(adError);
+                    Log.e("Admob", "Ad failed to show fullscreen content.");
+                    mInterstitialAd = null;
+                }
+
+                @Override
+                public void onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent();
+                    Log.d("Admob", "Ad showed fullscreen content.");
+                }
+            });
+        }
+
+    }
     public void save(View view){
         sharedPreferences.edit().putInt("bestScore", score).apply();
     }
@@ -144,7 +204,14 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void playSound(View view){
+        if(adHealth == 3 & mInterstitialAd != null){
+            mInterstitialAd.show(GameActivity.this);
+            adHealth = 0;
+        }else if(mInterstitialAd == null) {
+            Log.i("Admob", "Ad dismiss");
+        }
         music.start();
+        adHealth += 1;
     }
 
     public void checkVoice(int index){
