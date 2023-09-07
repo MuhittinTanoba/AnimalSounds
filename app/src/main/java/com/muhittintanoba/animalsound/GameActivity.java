@@ -12,10 +12,21 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.google.android.gms.ads.AdError;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.FullScreenContentCallback;
+import com.google.android.gms.ads.LoadAdError;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+import com.google.android.gms.ads.interstitial.InterstitialAd;
+import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,16 +38,16 @@ public class GameActivity extends AppCompatActivity {
     MediaPlayer music;
     TextView scoreText;
     TextView bestScoreText;
-    Bitmap myBitmap;
+    private InterstitialAd mInterstitialAd;
 
 
     int[] animalVoices = {R.raw.dog, R.raw.cat, R.raw.bird, R.raw.bear, R.raw.cow, R.raw.chick,
-            R.raw.chicken, R.raw.donkey, R.raw.duck, R.raw.elephant, R.raw.frog, R.raw.goat,
-            R.raw.horse, R.raw.lion, R.raw.pig, R.raw.rooster, R.raw.sheep, R.raw.tiger, R.raw.wolf};
+            R.raw.donkey, R.raw.duck, R.raw.elephant, R.raw.frog,
+            R.raw.horse, R.raw.lion, R.raw.pig, R.raw.rooster, R.raw.sheep, R.raw.tiger};
 
     int[] animalImages = {R.drawable.dog, R.drawable.cat, R.drawable.bird, R.drawable.bear, R.drawable.cow, R.drawable.chick,
-            R.drawable.chicken, R.drawable.donkey, R.drawable.duck, R.drawable.elephant, R.drawable.frog, R.drawable.goat,
-            R.drawable.horse, R.drawable.lion, R.drawable.pig, R.drawable.rooster, R.drawable.sheep, R.drawable.tiger, R.drawable.wolf};
+             R.drawable.donkey, R.drawable.duck, R.drawable.elephant, R.drawable.frog,
+            R.drawable.horse, R.drawable.lion, R.drawable.pig, R.drawable.rooster, R.drawable.sheep, R.drawable.tiger};
 
     List<Integer> playedSounds = new ArrayList<Integer>();
 
@@ -44,12 +55,15 @@ public class GameActivity extends AppCompatActivity {
 
     SharedPreferences sharedPreferences;
     int bestScore;
-    Context context;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+
+
+
+
 
         scoreText = (TextView) findViewById(R.id.scoreText);
         bestScoreText = (TextView) findViewById(R.id.bestScoreText);
@@ -75,10 +89,10 @@ public class GameActivity extends AppCompatActivity {
 
     public void changeImage(){
         do{
-            randomForFirst = (int)Math.floor(Math.random() * (19));
-            randomForSecond = (int)Math.floor(Math.random() * (19));
-            randomForThird = (int)Math.floor(Math.random() * (19));
-            randomForFourth = (int)Math.floor(Math.random() * (19));
+            randomForFirst = (int)Math.floor(Math.random() * (animalImages.length));
+            randomForSecond = (int)Math.floor(Math.random() * (animalImages.length));
+            randomForThird = (int)Math.floor(Math.random() * (animalImages.length));
+            randomForFourth = (int)Math.floor(Math.random() * (animalImages.length));
         }while (randomForFirst == randomForSecond ||
                 randomForFirst == randomForThird ||
                 randomForSecond == randomForThird ||
@@ -99,9 +113,11 @@ public class GameActivity extends AppCompatActivity {
         Bitmap bitmapImage = BitmapFactory.decodeResource(getResources(),image);
         return resizeImage(bitmapImage, 100);
     }
+
     public Bitmap resizeImage (Bitmap image, int maximumSize) {
         int width = image.getWidth();
         int height = image.getHeight();
+        if(width <= 0 || height <= 0 ) System.out.println("TESPİT");
 
         float bitMapRatio = width/height;
 
@@ -119,7 +135,7 @@ public class GameActivity extends AppCompatActivity {
     public void changeSound(){
         // Choosing random voice
         do{
-            randomVoice = (int)Math.floor(Math.random() * (19));
+            randomVoice = (int)Math.floor(Math.random() * (animalImages.length));
         } while(randomForFirst!=randomVoice
                 & randomForSecond!=randomVoice
                 & randomForThird!=randomVoice

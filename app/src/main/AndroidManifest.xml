@@ -12,6 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AnimalSound"
         tools:targetApi="31">
+        <meta-data
+            android:name="com.google.android.gms.ads.APPLICATION_ID"
+            android:value="ca-app-pub-8847909606639344~1949798573"/>
         <activity
             android:name=".OnBoarding"
             android:exported="false" />
