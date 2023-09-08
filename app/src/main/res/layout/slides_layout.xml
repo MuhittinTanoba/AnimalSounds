@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/bgcolor">
 
     <ImageView
         android:id="@+id/slider_image"
@@ -20,6 +21,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/rock_salt"
         android:text="TextView"
+        android:textColor="@color/white"
         android:textSize="34sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -33,5 +35,7 @@
         android:text="@string/first_slide_desc"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        android:fontFamily="@font/rock_salt"
+        android:textColor="@color/white"
         app:layout_constraintTop_toBottomOf="@+id/slider_header" />
 </androidx.constraintlayout.widget.ConstraintLayout>

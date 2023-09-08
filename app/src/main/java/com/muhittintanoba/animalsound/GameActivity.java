@@ -42,13 +42,151 @@ public class GameActivity extends AppCompatActivity {
     private InterstitialAd mInterstitialAd;
 
 
-    int[] animalVoices = {R.raw.dog, R.raw.cat, R.raw.bird, R.raw.bear, R.raw.cow, R.raw.chick,
-            R.raw.donkey, R.raw.duck, R.raw.elephant, R.raw.frog,
-            R.raw.horse, R.raw.lion, R.raw.pig, R.raw.rooster, R.raw.sheep, R.raw.tiger};
+    int[] animalVoices = {
+            R.raw.dog,
+            R.raw.cat,
+            R.raw.bird,
+            R.raw.bear,
+            R.raw.cow,
+            R.raw.chick,
+            R.raw.donkey,
+            R.raw.duck,
+            R.raw.elephant,
+            R.raw.frog,
+            R.raw.horse,
+            R.raw.lion,
+            R.raw.pig,
+            R.raw.rooster,
+            R.raw.sheep,
+            R.raw.tiger,
+            R.raw.alligator,
+            R.raw.amazonmacaw,
+            R.raw.bee,
+            R.raw.bison,
+            R.raw.bull,
+            R.raw.canarybird,
+            R.raw.chipmunks,
+            R.raw.cows,
+            R.raw.coyote,
+            R.raw.cricket,
+            R.raw.crickets,
+            R.raw.crows,
+            R.raw.elefant,
+            R.raw.elk,
+            R.raw.finch,
+            R.raw.fox,
+            R.raw.geese,
+            R.raw.geier,
+            R.raw.goat,
+            R.raw.gorilla,
+            R.raw.grasshopper,
+            R.raw.jay,
+            R.raw.kapuzineraffe,
+            R.raw.kingcobra,
+            R.raw.lamb,
+            R.raw.lapwing,
+            R.raw.leopard,
+            R.raw.loewen,
+            R.raw.mockingbird,
+            R.raw.moewe,
+            R.raw.mosquito,
+            R.raw.nightingale,
+            R.raw.osprey,
+            R.raw.owl,
+            R.raw.peacock,
+            R.raw.pigeons,
+            R.raw.pony,
+            R.raw.puma,
+            R.raw.rattlesnake,
+            R.raw.raven,
+            R.raw.redlori,
+            R.raw.redparrot,
+            R.raw.rhinozerus,
+            R.raw.rooster,
+            R.raw.schimpanse,
+            R.raw.snowyowl,
+            R.raw.sparrow,
+            R.raw.squirrel,
+            R.raw.swallow,
+            R.raw.tawnyfrogmouth,
+            R.raw.turkey,
+            R.raw.wolf,
+            R.raw.woodpecker,
+            R.raw.yellowrumpedwarbler
+    };
 
-    int[] animalImages = {R.drawable.dog, R.drawable.cat, R.drawable.bird, R.drawable.bear, R.drawable.cow, R.drawable.chick,
-             R.drawable.donkey, R.drawable.duck, R.drawable.elephant, R.drawable.frog,
-            R.drawable.horse, R.drawable.lion, R.drawable.pig, R.drawable.rooster, R.drawable.sheep, R.drawable.tiger};
+    int[] animalImages = {
+            R.drawable.dog,
+            R.drawable.cat,
+            R.drawable.bird,
+            R.drawable.bear,
+            R.drawable.cow,
+            R.drawable.chick,
+            R.drawable.donkey,
+            R.drawable.duck,
+            R.drawable.elephant,
+            R.drawable.frog,
+            R.drawable.horse,
+            R.drawable.lion,
+            R.drawable.pig,
+            R.drawable.rooster,
+            R.drawable.sheep,
+            R.drawable.tiger,
+            R.drawable.alligator,
+            R.drawable.amazonmacaw,
+            R.drawable.bee,
+            R.drawable.bison,
+            R.drawable.bull,
+            R.drawable.canarybird,
+            R.drawable.chipmunks,
+            R.drawable.cows,
+            R.drawable.coyote,
+            R.drawable.cricket,
+            R.drawable.crickets,
+            R.drawable.crows,
+            R.drawable.elefant,
+            R.drawable.elk,
+            R.drawable.finch,
+            R.drawable.fox,
+            R.drawable.geese,
+            R.drawable.geier,
+            R.drawable.goat,
+            R.drawable.gorilla,
+            R.drawable.grasshopper,
+            R.drawable.jay,
+            R.drawable.kapuzineraffe,
+            R.drawable.kingcobra,
+            R.drawable.lamb,
+            R.drawable.lapwing,
+            R.drawable.leopard,
+            R.drawable.loewen,
+            R.drawable.mockingbird,
+            R.drawable.moewe,
+            R.drawable.mosquito,
+            R.drawable.nightingale,
+            R.drawable.osprey,
+            R.drawable.owl,
+            R.drawable.peacock,
+            R.drawable.pigeons,
+            R.drawable.pony,
+            R.drawable.puma,
+            R.drawable.rattlesnake,
+            R.drawable.raven,
+            R.drawable.redlori,
+            R.drawable.redparrot,
+            R.drawable.rhinozerus,
+            R.drawable.rooster,
+            R.drawable.schimpanse,
+            R.drawable.snowyowl,
+            R.drawable.sparrow,
+            R.drawable.squirrel,
+            R.drawable.swallow,
+            R.drawable.tawnyfrogmouth,
+            R.drawable.turkey,
+            R.drawable.wolf,
+            R.drawable.woodpecker,
+            R.drawable.yellowrumpedwarbler
+    };
 
     List<Integer> playedSounds = new ArrayList<Integer>();
 
@@ -165,8 +303,6 @@ public class GameActivity extends AppCompatActivity {
         image2.setImageBitmap(convertToBitmap(animalImages[randomForSecond]));
         image3.setImageBitmap(convertToBitmap(animalImages[randomForThird]));
         image4.setImageBitmap(convertToBitmap(animalImages[randomForFourth]));
-
-
     }
 
     public Bitmap convertToBitmap(int image){
@@ -204,7 +340,7 @@ public class GameActivity extends AppCompatActivity {
     }
 
     public void playSound(View view){
-        if(adHealth == 3 & mInterstitialAd != null){
+        if(adHealth > 3 & mInterstitialAd != null){
             mInterstitialAd.show(GameActivity.this);
             adHealth = 0;
         }else if(mInterstitialAd == null) {
@@ -218,7 +354,6 @@ public class GameActivity extends AppCompatActivity {
         if(randomVoice == index){
             score += 1;
             scoreText.setText("Score: "+ score);
-
             if(bestScore<=score) {
                 bestScore = score;
                 sharedPreferences.edit().putInt("bestScore", bestScore).apply();
@@ -231,6 +366,7 @@ public class GameActivity extends AppCompatActivity {
                 playedSounds.remove(0);
                 playedSounds.add(index);
             }
+            music.pause();
             changeImage();
             changeSound();
         }else{
