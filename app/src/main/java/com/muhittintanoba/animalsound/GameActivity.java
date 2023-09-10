@@ -4,17 +4,16 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.View;
-import android.widget.Button;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -32,16 +31,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GameActivity extends AppCompatActivity {
-    int score = 0;
-
-    ImageView image1, image2, image3, image4;
-    MediaPlayer music;
-    TextView scoreText;
-    TextView bestScoreText;
-    int adHealth = 0;
-    private InterstitialAd mInterstitialAd;
-
-
     int[] animalVoices = {
             R.raw.dog,
             R.raw.cat,
@@ -187,13 +176,15 @@ public class GameActivity extends AppCompatActivity {
             R.drawable.woodpecker,
             R.drawable.yellowrumpedwarbler
     };
-
+    ImageView image1, image2, image3, image4, heartImageView;
+    MediaPlayer music;
+    TextView scoreText, bestScoreText, healthText;
+    private InterstitialAd mInterstitialAd;
     List<Integer> playedSounds = new ArrayList<Integer>();
-
-    int randomVoice, randomForFirst, randomForSecond, randomForThird, randomForFourth;
-
+    int randomVoice, randomForFirst, randomForSecond, randomForThird, randomForFourth, bestScore, health = 10, score = 0;
     SharedPreferences sharedPreferences;
-    int bestScore;
+    Animation heartBeatAnimation;
+    Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -203,8 +194,12 @@ public class GameActivity extends AppCompatActivity {
         initAdmob();
         loadIntersititial();
 
+        heartImageView = findViewById(R.id.heartImageView);
+        heartBeatAnimation = AnimationUtils.loadAnimation(this, R.anim.heart_beat);
         scoreText = (TextView) findViewById(R.id.scoreText);
         bestScoreText = (TextView) findViewById(R.id.bestScoreText);
+        healthText = (TextView) findViewById(R.id.healthText);
+        healthText.setText(Integer.toString(health));
 
         sharedPreferences= this.getSharedPreferences("com.muhittintanoba.animalsound", Context.MODE_PRIVATE);
         bestScore = sharedPreferences.getInt("bestScore", 0);
@@ -224,7 +219,156 @@ public class GameActivity extends AppCompatActivity {
             Log.d("TAG", "The interstitial ad wasn't ready yet.");
         }
 
+        heartBeatAnim(600,300);
+
     }
+
+
+
+    // ------------------ GAME ------------------
+    public void changeImage(){
+        do{
+            randomForFirst = (int)Math.floor(Math.random() * (animalImages.length));
+            randomForSecond = (int)Math.floor(Math.random() * (animalImages.length));
+            randomForThird = (int)Math.floor(Math.random() * (animalImages.length));
+            randomForFourth = (int)Math.floor(Math.random() * (animalImages.length));
+        }while (randomForFirst == randomForSecond ||
+                randomForFirst == randomForThird ||
+                randomForSecond == randomForThird ||
+                randomForFourth == randomForThird ||
+                randomForFourth == randomForSecond ||
+                randomForFourth == randomForFirst ||
+        checkArray(randomForFirst, randomForSecond, randomForThird, randomForFourth, playedSounds));
+
+        image1.setImageBitmap(convertToBitmap(animalImages[randomForFirst]));
+        image2.setImageBitmap(convertToBitmap(animalImages[randomForSecond]));
+        image3.setImageBitmap(convertToBitmap(animalImages[randomForThird]));
+        image4.setImageBitmap(convertToBitmap(animalImages[randomForFourth]));
+    }
+    public void changeSound(){
+        // Choosing random voice
+        do{
+            randomVoice = (int)Math.floor(Math.random() * (animalImages.length));
+        } while(randomForFirst!=randomVoice
+                & randomForSecond!=randomVoice
+                & randomForThird!=randomVoice
+                & randomForFourth!=randomVoice);
+        music = MediaPlayer.create(GameActivity.this, animalVoices[randomVoice]);
+    }
+    public void checkVoice(int index){
+        if(randomVoice == index){
+            score += 1;
+            scoreText.setText("Score: "+ score);
+            if(bestScore<=score) {
+                bestScore = score;
+                sharedPreferences.edit().putInt("bestScore", bestScore).apply();
+                bestScoreText.setText("Best Score: " + bestScore);
+            };
+
+            if(playedSounds.size() < 10){
+                playedSounds.add(index);
+            }else{
+                playedSounds.remove(0);
+                playedSounds.add(index);
+            }
+            music.pause();
+            changeImage();
+            changeSound();
+        }else{
+            health -=1 ;
+            score = 0;
+            scoreText.setText("Score: "+ score);
+            healthText.setText(Integer.toString(health));
+            checkHeathAndShowAd();
+        }
+    }
+    public boolean checkArray(int first, int second, int third, int fourth, @NonNull List<Integer> array){
+        if(array.contains(first)
+                || array.contains(second)
+                || array.contains(third)
+                || array.contains(fourth)){
+            return true;
+        }
+        return false;
+    }
+    public void checkHeathAndShowAd(){
+        if(health <= 4){
+            handler.removeCallbacksAndMessages(null);
+            heartBeatAnim(300, 150);
+        }
+        if(health <= 0 & mInterstitialAd != null){
+            mInterstitialAd.show(GameActivity.this);
+            health += 3;
+            healthText.setText(Integer.toString(health));
+        }else if(mInterstitialAd == null) {
+            Log.i("Admob", "Ad dismiss");
+        }
+    }
+    public void playSound(View view){
+        music.start();
+    }
+    public void clickedFirstImage(View view){
+        checkVoice(randomForFirst);
+    }
+    public void clickedSecondImage(View view){
+        checkVoice(randomForSecond);
+    }
+    public void clickedThirdImage(View view){
+        checkVoice(randomForThird);
+    }
+    public void clickedFourthImage(View view){
+        checkVoice(randomForFourth);
+    }
+
+
+
+
+    // ------------------ ANIMATION ------------------
+    public void heartBeatAnim(int beatSpeed, int durationTime){
+        int newDuration = durationTime;
+        heartBeatAnimation.setDuration(newDuration);
+
+        // Animasyonu görünüme uygula
+        heartImageView.startAnimation(heartBeatAnimation);
+
+        handler = new Handler();
+        final int delay = beatSpeed;
+        handler.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                heartImageView.startAnimation(heartBeatAnimation);
+                handler.postDelayed(this, delay);
+            }
+        }, delay);
+    }
+
+
+    // ------------------ IMAGE RESIZER ------------------
+    public Bitmap convertToBitmap(int image){
+        Bitmap bitmapImage = BitmapFactory.decodeResource(getResources(),image);
+        return resizeImage(bitmapImage, 100);
+    }
+    public Bitmap resizeImage (@NonNull Bitmap image, int maximumSize) {
+        int width = image.getWidth();
+        int height = image.getHeight();
+        if(width <= 0 || height <= 0 ) System.out.println("TESPİT");
+
+        float bitMapRatio = width/height;
+
+        if(bitMapRatio > 1) {
+            width = maximumSize;
+            height = (int) (width / bitMapRatio);
+        }else {
+            height = maximumSize;
+            width = (int) (height * bitMapRatio);
+        }
+
+        return image.createScaledBitmap(image, width, 100, true);
+    }
+
+
+
+    // ------------------ ADMOB ------------------
 
     public void initAdmob(){
         MobileAds.initialize(getApplicationContext(), new OnInitializationCompleteListener() {
@@ -281,128 +425,14 @@ public class GameActivity extends AppCompatActivity {
         }
 
     }
+
+
+
+    // ------------------ BEST SCORE ------------------
     public void save(View view){
         sharedPreferences.edit().putInt("bestScore", score).apply();
     }
 
-    public void changeImage(){
-        do{
-            randomForFirst = (int)Math.floor(Math.random() * (animalImages.length));
-            randomForSecond = (int)Math.floor(Math.random() * (animalImages.length));
-            randomForThird = (int)Math.floor(Math.random() * (animalImages.length));
-            randomForFourth = (int)Math.floor(Math.random() * (animalImages.length));
-        }while (randomForFirst == randomForSecond ||
-                randomForFirst == randomForThird ||
-                randomForSecond == randomForThird ||
-                randomForFourth == randomForThird ||
-                randomForFourth == randomForSecond ||
-                randomForFourth == randomForFirst ||
-        checkArray(randomForFirst, randomForSecond, randomForThird, randomForFourth, playedSounds));
-
-        image1.setImageBitmap(convertToBitmap(animalImages[randomForFirst]));
-        image2.setImageBitmap(convertToBitmap(animalImages[randomForSecond]));
-        image3.setImageBitmap(convertToBitmap(animalImages[randomForThird]));
-        image4.setImageBitmap(convertToBitmap(animalImages[randomForFourth]));
-    }
-
-    public Bitmap convertToBitmap(int image){
-        Bitmap bitmapImage = BitmapFactory.decodeResource(getResources(),image);
-        return resizeImage(bitmapImage, 100);
-    }
-
-    public Bitmap resizeImage (Bitmap image, int maximumSize) {
-        int width = image.getWidth();
-        int height = image.getHeight();
-        if(width <= 0 || height <= 0 ) System.out.println("TESPİT");
-
-        float bitMapRatio = width/height;
-
-        if(bitMapRatio > 1) {
-            width = maximumSize;
-            height = (int) (width / bitMapRatio);
-        }else {
-            height = maximumSize;
-            width = (int) (height * bitMapRatio);
-        }
-
-        return image.createScaledBitmap(image, width, 100, true);
-    }
-
-    public void changeSound(){
-        // Choosing random voice
-        do{
-            randomVoice = (int)Math.floor(Math.random() * (animalImages.length));
-        } while(randomForFirst!=randomVoice
-                & randomForSecond!=randomVoice
-                & randomForThird!=randomVoice
-                & randomForFourth!=randomVoice);
-        music = MediaPlayer.create(GameActivity.this, animalVoices[randomVoice]);
-    }
-
-    public void playSound(View view){
-        if(adHealth > 3 & mInterstitialAd != null){
-            mInterstitialAd.show(GameActivity.this);
-            adHealth = 0;
-        }else if(mInterstitialAd == null) {
-            Log.i("Admob", "Ad dismiss");
-        }
-        music.start();
-        adHealth += 1;
-    }
-
-    public void checkVoice(int index){
-        if(randomVoice == index){
-            score += 1;
-            scoreText.setText("Score: "+ score);
-            if(bestScore<=score) {
-                bestScore = score;
-                sharedPreferences.edit().putInt("bestScore", bestScore).apply();
-                bestScoreText.setText("Best Score: " + bestScore);
-            };
-
-            if(playedSounds.size() < 10){
-                playedSounds.add(index);
-            }else{
-                playedSounds.remove(0);
-                playedSounds.add(index);
-            }
-            music.pause();
-            changeImage();
-            changeSound();
-        }else{
-            score = 0;
-            scoreText.setText("Score: "+ score);
-        }
-    }
 
 
-    public boolean checkArray(int first, int second, int third, int fourth, @NonNull List<Integer> array){
-        if(array.contains(first)
-                || array.contains(second)
-                || array.contains(third)
-                || array.contains(fourth)){
-            return true;
-        }
-        return false;
-    }
-
-    public void clickedFirstImage(View view){
-        checkVoice(randomForFirst);
-    }
-
-
-    public void clickedSecondImage(View view){
-        checkVoice(randomForSecond);
-    }
-
-    public void clickedThirdImage(View view){
-        checkVoice(randomForThird);
-    }
-
-    public void clickedFourthImage(View view){
-        checkVoice(randomForFourth);
-    }
-
-
-
-    }
+}
