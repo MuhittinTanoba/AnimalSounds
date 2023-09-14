@@ -3,6 +3,7 @@ package com.muhittintanoba.animalsound;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -16,16 +17,21 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.AdError;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.FullScreenContentCallback;
 import com.google.android.gms.ads.LoadAdError;
 import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.OnUserEarnedRewardListener;
 import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.google.android.gms.ads.interstitial.InterstitialAd;
 import com.google.android.gms.ads.interstitial.InterstitialAdLoadCallback;
+import com.google.android.gms.ads.rewarded.RewardItem;
+import com.google.android.gms.ads.rewarded.RewardedAd;
+import com.google.android.gms.ads.rewarded.RewardedAdLoadCallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -176,7 +182,7 @@ public class GameActivity extends AppCompatActivity {
             R.drawable.woodpecker,
             R.drawable.yellowrumpedwarbler
     };
-    ImageView image1, image2, image3, image4, heartImageView;
+    ImageView image1, image2, image3, image4, heartImageView, correctImage;
     MediaPlayer music;
     TextView scoreText, bestScoreText, healthText;
     private InterstitialAd mInterstitialAd;
@@ -185,6 +191,7 @@ public class GameActivity extends AppCompatActivity {
     SharedPreferences sharedPreferences;
     Animation heartBeatAnimation;
     Handler handler;
+    private RewardedAd mRewardedAd;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +200,7 @@ public class GameActivity extends AppCompatActivity {
 
         initAdmob();
         loadIntersititial();
+        loadRewardedAd();
 
         heartImageView = findViewById(R.id.heartImageView);
         heartBeatAnimation = AnimationUtils.loadAnimation(this, R.anim.heart_beat);
@@ -213,11 +221,7 @@ public class GameActivity extends AppCompatActivity {
 
         changeImage();
         changeSound();
-        if (mInterstitialAd != null) {
-            mInterstitialAd.show(GameActivity.this);
-        } else {
-            Log.d("TAG", "The interstitial ad wasn't ready yet.");
-        }
+
 
         heartBeatAnim(600,300);
 
@@ -304,6 +308,9 @@ public class GameActivity extends AppCompatActivity {
             Log.i("Admob", "Ad dismiss");
         }
     }
+    public void showAnswer(View view) {
+
+    }
     public void playSound(View view){
         music.start();
     }
@@ -340,6 +347,12 @@ public class GameActivity extends AppCompatActivity {
                 handler.postDelayed(this, delay);
             }
         }, delay);
+    }
+
+    public void clueAnimation(ImageView imageView){
+        correctImage = imageView;
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.scale_rotate);
+        correctImage.startAnimation(animation);
     }
 
 
@@ -425,7 +438,80 @@ public class GameActivity extends AppCompatActivity {
         }
 
     }
+    public void loadRewardedAd(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        RewardedAd.load(getApplicationContext(), "ca-app-pub-3940256099942544/5224354917",
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
+                        Log.d("AdmobR", loadAdError.toString());
+                        mRewardedAd = null;
+                    }
 
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                        super.onAdLoaded(rewardedAd);
+                        mRewardedAd = rewardedAd;
+                        Log.i("AdmobR", "Ad was loaded");
+                    }
+                });
+
+        if(mRewardedAd != null){
+            mRewardedAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    Log.i("AdmobR", "Ad was clicked");
+                }
+
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent();
+                    Log.d("AdmobR", "Ad dissmissed");
+                    mRewardedAd = null;
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                    super.onAdFailedToShowFullScreenContent(adError);
+                    Log.d("AdmobR", "Ad failed to show");
+                    mRewardedAd = null;
+                }
+
+                @Override
+                public void onAdImpression() {
+                    super.onAdImpression();
+                    Log.d("AdmobR", "ad recorded an impression");
+                }
+
+                @Override
+                public void onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent();
+                    Log.d("AdmobR", "ad showed fullscreen content");
+                }
+            });
+        }
+    }
+
+    public void showRewardedAd(View view){
+        if (mRewardedAd != null) {
+            Activity activityContext = GameActivity.this;
+            mRewardedAd.show(activityContext, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    Log.d("AdmobR", "The user earned the reward.");
+                    int rewardAmount = rewardItem.getAmount();
+                    String rewardType = rewardItem.getType();
+                    health += rewardAmount;
+                    healthText.setText(Integer.toString(health));
+                }
+            });
+        } else {
+            Log.d("AdmobR", "The rewarded ad wasn't ready yet.");
+            Toast.makeText(getApplicationContext(), "The rewarded ad wasn't ready yet.", Toast.LENGTH_SHORT).show();
+        }
+    }
 
 
     // ------------------ BEST SCORE ------------------

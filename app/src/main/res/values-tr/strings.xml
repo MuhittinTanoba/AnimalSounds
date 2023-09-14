@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Animal Sound</string>
+    <string name="play_button">OYNA</string>
+    <string name="play_sound">Sesi çal</string>
+    <string name="score_text">Skor: 0</string>
+    <string name="best_score_text">"En İyi Skor: "</string>
+	<string name="guess_text">Hayvan seslerini tahmin et</string>
+</resources>
