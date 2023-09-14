@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
@@ -182,16 +183,18 @@ public class GameActivity extends AppCompatActivity {
             R.drawable.woodpecker,
             R.drawable.yellowrumpedwarbler
     };
-    ImageView image1, image2, image3, image4, heartImageView, correctImage;
-    MediaPlayer music;
+    ImageView image1, image2, image3, image4, heartImageView, correctImage, cross1, cross2, cross3, cross4;
+    MediaPlayer music, correctSound, wrongSound;
     TextView scoreText, bestScoreText, healthText;
     private InterstitialAd mInterstitialAd;
     List<Integer> playedSounds = new ArrayList<Integer>();
-    int randomVoice, randomForFirst, randomForSecond, randomForThird, randomForFourth, bestScore, health = 10, score = 0;
+    int randomVoice, randomForFirst, randomForSecond, randomForThird, randomForFourth,
+            bestScore, health = 10, score = 0, clueLife = 3;
     SharedPreferences sharedPreferences;
-    Animation heartBeatAnimation;
+    Animation heartBeatAnimation, marksAnimation;
     Handler handler;
-    private RewardedAd mRewardedAd;
+    private RewardedAd mRewardedAd, mClueRewardAd;
+    boolean isWrongAnswer = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -201,6 +204,7 @@ public class GameActivity extends AppCompatActivity {
         initAdmob();
         loadIntersititial();
         loadRewardedAd();
+        loadClueRewardedAd();
 
         heartImageView = findViewById(R.id.heartImageView);
         heartBeatAnimation = AnimationUtils.loadAnimation(this, R.anim.heart_beat);
@@ -208,6 +212,9 @@ public class GameActivity extends AppCompatActivity {
         bestScoreText = (TextView) findViewById(R.id.bestScoreText);
         healthText = (TextView) findViewById(R.id.healthText);
         healthText.setText(Integer.toString(health));
+        correctSound = MediaPlayer.create(GameActivity.this, R.raw.positive_sound);
+        wrongSound = MediaPlayer.create(GameActivity.this, R.raw.negative_beeps);
+        marksAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 
         sharedPreferences= this.getSharedPreferences("com.muhittintanoba.animalsound", Context.MODE_PRIVATE);
         bestScore = sharedPreferences.getInt("bestScore", 0);
@@ -218,6 +225,11 @@ public class GameActivity extends AppCompatActivity {
         image2 = (ImageView) findViewById(R.id.image2);
         image3 = (ImageView) findViewById(R.id.image3);
         image4 = (ImageView) findViewById(R.id.image4);
+        cross1 = (ImageView) findViewById(R.id.cross1);
+        cross2 = (ImageView) findViewById(R.id.cross2);
+        cross3 = (ImageView) findViewById(R.id.cross3);
+        cross4 = (ImageView) findViewById(R.id.cross4);
+
 
         changeImage();
         changeSound();
@@ -261,6 +273,7 @@ public class GameActivity extends AppCompatActivity {
     }
     public void checkVoice(int index){
         if(randomVoice == index){
+            isWrongAnswer = false;
             score += 1;
             scoreText.setText("Score: "+ score);
             if(bestScore<=score) {
@@ -275,14 +288,31 @@ public class GameActivity extends AppCompatActivity {
                 playedSounds.remove(0);
                 playedSounds.add(index);
             }
-            music.pause();
-            changeImage();
-            changeSound();
+            correctSound.start();
+            correctMark();
+
+
+            getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+
+            Handler handlerCorrectAnswer = new Handler();
+            handlerCorrectAnswer.postDelayed(new Runnable() {
+                public void run() {
+                    music.pause();
+                    correctSound.pause();
+                    changeImage();
+                    changeSound();
+                    getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
+                    isWrongAnswer = true;
+                }
+            }, 3000);
+
         }else{
             health -=1 ;
             score = 0;
             scoreText.setText("Score: "+ score);
             healthText.setText(Integer.toString(health));
+            wrongSound.start();
             checkHeathAndShowAd();
         }
     }
@@ -309,24 +339,94 @@ public class GameActivity extends AppCompatActivity {
         }
     }
     public void showAnswer(View view) {
+        if (mClueRewardAd != null & clueLife == 0) {
+            Activity activityContext = GameActivity.this;
+            mClueRewardAd.show(activityContext, new OnUserEarnedRewardListener() {
+                @Override
+                public void onUserEarnedReward(@NonNull RewardItem rewardItem) {
+                    Log.d("AdmobR", "The user earned the reward.");
+                    int rewardAmount = rewardItem.getAmount();
+                    String rewardType = rewardItem.getType();
+                    clueLife += rewardAmount;
+                }
+            });
+        } else if(mClueRewardAd == null) {
+            Log.d("AdmobR", "The rewarded ad wasn't ready yet.");
+            Toast.makeText(getApplicationContext(), "The rewarded ad wasn't ready yet.", Toast.LENGTH_SHORT).show();
+        }
 
+        if(clueLife > 0){
+            if(randomVoice == randomForFirst) clueAnimation(image1);
+            else if(randomVoice == randomForSecond) clueAnimation(image2);
+            else if(randomVoice == randomForThird) clueAnimation(image3);
+            else if(randomVoice == randomForFourth) clueAnimation(image4);
+            clueLife -= 1;
+        }
     }
     public void playSound(View view){
         music.start();
     }
     public void clickedFirstImage(View view){
         checkVoice(randomForFirst);
+        if(isWrongAnswer) {
+            cross1.setImageResource(R.drawable.cross_out);
+            cross1.startAnimation(marksAnimation);
+            cross1.setVisibility(View.VISIBLE);
+        }
     }
     public void clickedSecondImage(View view){
         checkVoice(randomForSecond);
-    }
+        if(isWrongAnswer) {
+            cross2.setImageResource(R.drawable.cross_out);
+            cross2.startAnimation(marksAnimation);
+            cross2.setVisibility(View.VISIBLE);
+        }    }
     public void clickedThirdImage(View view){
         checkVoice(randomForThird);
-    }
+        if(isWrongAnswer) {
+            cross3.setImageResource(R.drawable.cross_out);
+            cross3.startAnimation(marksAnimation);
+            cross3.setVisibility(View.VISIBLE);
+        }    }
     public void clickedFourthImage(View view){
         checkVoice(randomForFourth);
-    }
+        if(isWrongAnswer) {
+            cross4.setImageResource(R.drawable.cross_out);
+            cross4.startAnimation(marksAnimation);
+            cross4.setVisibility(View.VISIBLE);
+        }    }
+    public void correctMark(){
+        if(randomVoice == randomForFirst) {
+            cross1.setImageResource(R.drawable.check_mark);
+            cross1.startAnimation(marksAnimation);
+            cross1.setVisibility(View.VISIBLE);
 
+        }
+        else if(randomVoice == randomForSecond) {
+            cross2.setImageResource(R.drawable.check_mark);
+            cross2.startAnimation(marksAnimation);
+            cross2.setVisibility(View.VISIBLE);
+        }
+        else if(randomVoice == randomForThird) {
+            cross3.setImageResource(R.drawable.check_mark);
+            cross3.startAnimation(marksAnimation);
+            cross3.setVisibility(View.VISIBLE);
+        }
+        else if(randomVoice == randomForFourth) {
+            cross4.setImageResource(R.drawable.check_mark);
+            cross4.startAnimation(marksAnimation);
+            cross4.setVisibility(View.VISIBLE);
+        }
+        Handler setVisibilityHandler = new Handler();
+        setVisibilityHandler.postDelayed(new Runnable() {
+            public void run() {
+                cross1.setVisibility(View.INVISIBLE);
+                cross2.setVisibility(View.INVISIBLE);
+                cross3.setVisibility(View.INVISIBLE);
+                cross4.setVisibility(View.INVISIBLE);
+            }
+        }, 3000);
+    }
 
 
 
@@ -493,7 +593,6 @@ public class GameActivity extends AppCompatActivity {
             });
         }
     }
-
     public void showRewardedAd(View view){
         if (mRewardedAd != null) {
             Activity activityContext = GameActivity.this;
@@ -505,11 +604,69 @@ public class GameActivity extends AppCompatActivity {
                     String rewardType = rewardItem.getType();
                     health += rewardAmount;
                     healthText.setText(Integer.toString(health));
+                    handler.removeCallbacksAndMessages(null);
+                    heartBeatAnim(600,300);
+
                 }
             });
         } else {
             Log.d("AdmobR", "The rewarded ad wasn't ready yet.");
             Toast.makeText(getApplicationContext(), "The rewarded ad wasn't ready yet.", Toast.LENGTH_SHORT).show();
+        }
+    }
+    public void loadClueRewardedAd(){
+        AdRequest adRequest = new AdRequest.Builder().build();
+        RewardedAd.load(getApplicationContext(), "ca-app-pub-3940256099942544/5224354917",
+                adRequest, new RewardedAdLoadCallback() {
+                    @Override
+                    public void onAdFailedToLoad(@NonNull LoadAdError loadAdError) {
+                        super.onAdFailedToLoad(loadAdError);
+                        Log.d("AdmobR", loadAdError.toString());
+                        mClueRewardAd = null;
+                    }
+
+                    @Override
+                    public void onAdLoaded(@NonNull RewardedAd rewardedAd) {
+                        super.onAdLoaded(rewardedAd);
+                        mClueRewardAd = rewardedAd;
+                        Log.i("AdmobR", "Ad was loaded");
+                    }
+                });
+
+        if(mClueRewardAd != null){
+            mClueRewardAd.setFullScreenContentCallback(new FullScreenContentCallback() {
+                @Override
+                public void onAdClicked() {
+                    super.onAdClicked();
+                    Log.i("AdmobR", "Ad was clicked");
+                }
+
+                @Override
+                public void onAdDismissedFullScreenContent() {
+                    super.onAdDismissedFullScreenContent();
+                    Log.d("AdmobR", "Ad dissmissed");
+                    mClueRewardAd = null;
+                }
+
+                @Override
+                public void onAdFailedToShowFullScreenContent(@NonNull AdError adError) {
+                    super.onAdFailedToShowFullScreenContent(adError);
+                    Log.d("AdmobR", "Ad failed to show");
+                    mClueRewardAd = null;
+                }
+
+                @Override
+                public void onAdImpression() {
+                    super.onAdImpression();
+                    Log.d("AdmobR", "ad recorded an impression");
+                }
+
+                @Override
+                public void onAdShowedFullScreenContent() {
+                    super.onAdShowedFullScreenContent();
+                    Log.d("AdmobR", "ad showed fullscreen content");
+                }
+            });
         }
     }
 
