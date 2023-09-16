@@ -212,13 +212,14 @@ public class GameActivity extends AppCompatActivity {
         bestScoreText = (TextView) findViewById(R.id.bestScoreText);
         healthText = (TextView) findViewById(R.id.healthText);
         healthText.setText(Integer.toString(health));
+
         correctSound = MediaPlayer.create(GameActivity.this, R.raw.positive_sound);
         wrongSound = MediaPlayer.create(GameActivity.this, R.raw.negative_beeps);
         marksAnimation = AnimationUtils.loadAnimation(this, R.anim.fade_in);
 
         sharedPreferences= this.getSharedPreferences("com.muhittintanoba.animalsound", Context.MODE_PRIVATE);
         bestScore = sharedPreferences.getInt("bestScore", 0);
-        bestScoreText.setText("Best Score: " + bestScore);
+        bestScoreText.setText("Best: " + bestScore);
 
 
         image1 = (ImageView) findViewById(R.id.image1);
@@ -230,12 +231,13 @@ public class GameActivity extends AppCompatActivity {
         cross3 = (ImageView) findViewById(R.id.cross3);
         cross4 = (ImageView) findViewById(R.id.cross4);
 
-
+        cross1.bringToFront();
         changeImage();
         changeSound();
 
 
-        heartBeatAnim(600,300);
+        heartBeatAnim(600,300, heartImageView);
+        heartBeatAnim(600,300, healthText);
 
     }
 
@@ -279,7 +281,7 @@ public class GameActivity extends AppCompatActivity {
             if(bestScore<=score) {
                 bestScore = score;
                 sharedPreferences.edit().putInt("bestScore", bestScore).apply();
-                bestScoreText.setText("Best Score: " + bestScore);
+                bestScoreText.setText("Score: " + bestScore);
             };
 
             if(playedSounds.size() < 10){
@@ -328,12 +330,15 @@ public class GameActivity extends AppCompatActivity {
     public void checkHeathAndShowAd(){
         if(health <= 4){
             handler.removeCallbacksAndMessages(null);
-            heartBeatAnim(300, 150);
+            heartBeatAnim(300, 150, heartImageView);
+            heartBeatAnim(300, 150, healthText);
         }
         if(health <= 0 & mInterstitialAd != null){
             mInterstitialAd.show(GameActivity.this);
             health += 3;
             healthText.setText(Integer.toString(health));
+            mInterstitialAd = null;
+            loadIntersititial();
         }else if(mInterstitialAd == null) {
             Log.i("Admob", "Ad dismiss");
         }
@@ -348,6 +353,8 @@ public class GameActivity extends AppCompatActivity {
                     int rewardAmount = rewardItem.getAmount();
                     String rewardType = rewardItem.getType();
                     clueLife += rewardAmount;
+                    mClueRewardAd = null;
+                    loadClueRewardedAd();
                 }
             });
         } else if(mClueRewardAd == null) {
@@ -431,19 +438,19 @@ public class GameActivity extends AppCompatActivity {
 
 
     // ------------------ ANIMATION ------------------
-    public void heartBeatAnim(int beatSpeed, int durationTime){
+    public void heartBeatAnim(int beatSpeed, int durationTime, View viewAnim){
         int newDuration = durationTime;
         heartBeatAnimation.setDuration(newDuration);
 
         // Animasyonu görünüme uygula
-        heartImageView.startAnimation(heartBeatAnimation);
+        viewAnim.startAnimation(heartBeatAnimation);
 
         handler = new Handler();
         final int delay = beatSpeed;
         handler.postDelayed(new Runnable() {
             @Override
             public void run() {
-                heartImageView.startAnimation(heartBeatAnimation);
+                viewAnim.startAnimation(heartBeatAnimation);
                 handler.postDelayed(this, delay);
             }
         }, delay);
@@ -490,7 +497,6 @@ public class GameActivity extends AppCompatActivity {
                 Log.i("Admob","onInitializationComplete");
             }
         });
-
     }
     public void loadIntersititial() {
 
@@ -605,8 +611,10 @@ public class GameActivity extends AppCompatActivity {
                     health += rewardAmount;
                     healthText.setText(Integer.toString(health));
                     handler.removeCallbacksAndMessages(null);
-                    heartBeatAnim(600,300);
-
+                    heartBeatAnim(600,300, heartImageView);
+                    heartBeatAnim(600,300, healthText);
+                    mRewardedAd = null;
+                    loadRewardedAd();
                 }
             });
         } else {

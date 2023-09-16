@@ -4,73 +4,143 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".GameActivity"
-    android:background="@drawable/play_screen_blue"
-    >
+    android:background="@drawable/play_screen3"
+    tools:context=".GameActivity">
+
 
     <ImageView
-        android:id="@+id/image1"
-        android:layout_width="170dp"
-        android:layout_height="146dp"
+        android:id="@+id/cross1"
+        android:layout_width="73dp"
+        android:layout_height="128dp"
+        android:visibility="invisible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
+        app:layout_constraintHorizontal_bias="0.431"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background"
-        android:onClick="clickedFirstImage"/>
-
-
-    <ImageView
-        android:id="@+id/image2"
-        android:layout_width="170dp"
-        android:layout_height="146dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.116"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image1"
-        app:srcCompat="@drawable/ic_launcher_background"
-        android:onClick="clickedSecondImage"/>
+        app:layout_constraintVertical_bias="0.333"
+        app:srcCompat="@drawable/cross_out" />
 
     <ImageView
         android:id="@+id/image3"
         android:layout_width="170dp"
         android:layout_height="146dp"
+        android:onClick="clickedThirdImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.883"
+        app:layout_constraintHorizontal_bias="0.879"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_launcher_background"
-        android:onClick="clickedThirdImage"/>
+        app:layout_constraintVertical_bias="0.442"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+
+
+    <ImageView
+        android:id="@+id/cross3"
+        android:layout_width="73dp"
+        android:layout_height="128dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.333"
+        app:srcCompat="@drawable/cross_out" />
+
+    <ImageView
+        android:id="@+id/image2"
+        android:layout_width="170dp"
+        android:layout_height="146dp"
+        android:onClick="clickedSecondImage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/image1"
+        app:layout_constraintVertical_bias="0.377"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <ImageView
+        android:id="@+id/cross2"
+        android:layout_width="73dp"
+        android:layout_height="128dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.431"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.684"
+        app:srcCompat="@drawable/cross_out" />
 
     <ImageView
         android:id="@+id/image4"
         android:layout_width="170dp"
         android:layout_height="146dp"
+        android:onClick="clickedFourthImage"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.883"
+        app:layout_constraintHorizontal_bias="0.879"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/image3"
-        app:srcCompat="@drawable/ic_launcher_background"
-        android:onClick="clickedFourthImage"/>
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.808"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
+    <ImageView
+        android:id="@+id/cross4"
+        android:layout_width="73dp"
+        android:layout_height="128dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.97"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.684"
+        app:srcCompat="@drawable/cross_out" />
+
+    <ImageView
+        android:id="@+id/image1"
+        android:layout_width="170dp"
+        android:layout_height="146dp"
+        android:onClick="clickedFirstImage"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.107"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.442"
+        app:srcCompat="@drawable/ic_launcher_background" />
+
 
     <TextView
         android:id="@+id/scoreText"
-        android:layout_width="171dp"
-        android:layout_height="69dp"
+        android:layout_width="73dp"
+        android:layout_height="25dp"
         android:fontFamily="@font/rock_salt"
         android:text="@string/score_text"
-        android:textColor="#328EB0"
-        android:textSize="28sp"
+        android:textColor="#094055"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView4"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.914"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/imageView4"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="41dp"
+        android:layout_height="27dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.233"
+        app:layout_constraintHorizontal_bias="0.724"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.081" />
+        app:layout_constraintVertical_bias="0.247"
+        app:srcCompat="@drawable/score" />
 
     <TextView
         android:id="@+id/bestScoreText"
@@ -78,40 +148,37 @@
         android:layout_height="wrap_content"
         android:fontFamily="@font/rock_salt"
         android:text="@string/best_score_text"
-        android:textColor="#328EB0"
-        android:textSize="16sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:textColor="#FF094055"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/imageView5"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.94"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.038" />
+        app:layout_constraintHorizontal_bias="0.031"
+        app:layout_constraintStart_toEndOf="@+id/imageView5"
+        app:layout_constraintTop_toTopOf="@+id/imageView5"
+        app:layout_constraintVertical_bias="1.0" />
 
-    <Button
-        android:id="@+id/playSound"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="@font/rock_salt"
-        android:backgroundTint="@color/darkBlue"
-        android:onClick="playSound"
-        android:text="@string/play_sound"
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="40dp"
+        android:layout_height="28dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintHorizontal_bias="0.722"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.24" />
+        app:layout_constraintVertical_bias="0.285"
+        app:srcCompat="@drawable/best_score_medal" />
 
     <ImageView
         android:id="@+id/heartImageView"
-        android:layout_width="84dp"
-        android:layout_height="80dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="40dp"
+        android:layout_height="37dp"
+        app:layout_constraintBottom_toBottomOf="@+id/bulbImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.948"
+        app:layout_constraintHorizontal_bias="0.103"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.153"
+        app:layout_constraintTop_toTopOf="@+id/bulbImageView"
+        app:layout_constraintVertical_bias="0.263"
         app:srcCompat="@drawable/heart_icon" />
 
     <TextView
@@ -119,94 +186,52 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@color/white"
-        android:textSize="48sp"
+        android:textSize="12sp"
         app:layout_constraintBottom_toBottomOf="@+id/heartImageView"
         app:layout_constraintEnd_toEndOf="@+id/heartImageView"
-        app:layout_constraintHorizontal_bias="0.478"
+        app:layout_constraintHorizontal_bias="0.629"
         app:layout_constraintStart_toStartOf="@+id/heartImageView"
         app:layout_constraintTop_toTopOf="@+id/heartImageView"
-        app:layout_constraintVertical_bias="0.312" />
+        app:layout_constraintVertical_bias="0.538" />
 
     <ImageView
         android:id="@+id/videoImageView"
-        android:layout_width="75dp"
-        android:layout_height="68dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="7dp"
-        android:layout_marginEnd="17dp"
-        android:layout_marginBottom="38dp"
+        android:layout_width="38dp"
+        android:layout_height="39dp"
         android:onClick="showRewardedAd"
-        app:layout_constraintBottom_toTopOf="@+id/image3"
+        app:layout_constraintBottom_toBottomOf="@+id/bulbImageView"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/playSound"
-        app:layout_constraintTop_toBottomOf="@+id/heartImageView"
-        app:srcCompat="@drawable/video_icon" />
+        app:layout_constraintHorizontal_bias="0.329"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/bulbImageView"
+        app:layout_constraintVertical_bias="0.857"
+        app:srcCompat="@drawable/play_ad" />
 
     <ImageView
         android:id="@+id/bulbImageView"
-        android:layout_width="64dp"
-        android:layout_height="75dp"
-        android:layout_marginStart="28dp"
+        android:layout_width="34dp"
+        android:layout_height="42dp"
         android:layout_marginTop="32dp"
         android:layout_marginEnd="25dp"
-        android:layout_marginBottom="63dp"
         android:onClick="showAnswer"
-        app:layout_constraintBottom_toTopOf="@+id/image1"
-        app:layout_constraintEnd_toStartOf="@+id/playSound"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/scoreText"
-        app:srcCompat="@drawable/bulb" />
-
-    <ImageView
-        android:id="@+id/cross3"
-        android:layout_width="73dp"
-        android:layout_height="128dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.952"
+        app:layout_constraintHorizontal_bias="0.467"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.394"
-        app:srcCompat="@drawable/cross_out"
-        android:visibility="invisible"/>
+        app:layout_constraintVertical_bias="0.223"
+        app:srcCompat="@drawable/clue" />
 
     <ImageView
-        android:id="@+id/cross1"
-        android:layout_width="73dp"
-        android:layout_height="128dp"
+        android:id="@+id/imageView3"
+        android:layout_width="381dp"
+        android:layout_height="34dp"
+        android:onClick="playSound"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.414"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.394"
-        app:srcCompat="@drawable/cross_out"
-        android:visibility="invisible"/>
-
-    <ImageView
-        android:id="@+id/cross2"
-        android:layout_width="73dp"
-        android:layout_height="128dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.414"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.747"
-        app:srcCompat="@drawable/cross_out"
-        android:visibility="invisible"/>
-
-    <ImageView
-        android:id="@+id/cross4"
-        android:layout_width="73dp"
-        android:layout_height="128dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.952"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.747"
-        app:srcCompat="@drawable/cross_out"
-        android:visibility="invisible"/>
+        app:layout_constraintTop_toBottomOf="@+id/image4"
+        app:layout_constraintVertical_bias="0.666"
+        app:srcCompat="@drawable/play_sound_button_1" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

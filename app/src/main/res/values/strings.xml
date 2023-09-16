@@ -9,7 +9,7 @@
     /// Game Page
     <string name="play_sound">Play the Sound</string>
     <string name="score_text">Score: 0</string>
-    <string name="best_score_text">Best Score:</string>
+    <string name="best_score_text">Best:</string>
     <string name="guess_text">Guess animal sounds</string>
 
     /// Welcome Screen
