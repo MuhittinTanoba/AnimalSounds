@@ -5,4 +5,18 @@
     <string name="score_text">Skor: 0</string>
     <string name="best_score_text">"En İyi Skor: "</string>
 	<string name="guess_text">Hayvan seslerini tahmin et</string>
+
+    /// Welcome Screen
+    <string name="first_slide_title">Welcome</string>
+    <string name="second_slide_title">How To Play?</string>
+    <string name="third_slide_title">Choose The Animal</string>
+    <string name="fourth_slide_title">Do not Forget To Take a Hint</string>
+    <string name="lets_get_started">Lets Get Started</string>
+    <string name="first_slide_desc">Welcome to Animal Sounds, scroll to find out how the game is played.</string>
+    <string name="second_slide_desc">Press the bottom button and play the sound.</string>
+    <string name="third_slide_desc">Choose the picture of the animal you hear and score points</string>
+    <string name="fourth_slide_desc">The heart icon you see in the menu indicates how many lives you have left. You can earn 10 lives by clicking on the video icon next to it.
+The light bulb icon will help you figure out which animals voice is coming from, so you can get help if you cant understand the sound.</string>
+    <string name="skit_btn">Geç</string>
+
 </resources>

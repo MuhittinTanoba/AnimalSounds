@@ -1,6 +1,9 @@
 <resources>
     <color name="bgcolor">#8DC540</color>
     <color name="darkBlue">#328EB0</color>
+    <color name="gameMenu">#5AA7C4</color>
+    <color name="gameImageMenu">#328EB0</color>
+    <color name="backgroundColor">#52B4D9</color>
 
     /// Menu
     <string name="app_name">Animal Sound</string>
@@ -13,15 +16,15 @@
     <string name="guess_text">Guess animal sounds</string>
 
     /// Welcome Screen
-    <string name="first_slide_title">First</string>
-    <string name="second_slide_title">Second</string>
-    <string name="third_slide_title">Third</string>
-    <string name="fourth_slide_title">Fourth</string>
+    <string name="first_slide_title">Welcome</string>
+    <string name="second_slide_title">How To Play?</string>
+    <string name="third_slide_title">Choose The Animal</string>
+    <string name="fourth_slide_title">earn hints and lives</string>
     <string name="lets_get_started">Lets Get Started</string>
-    <string name="first_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
-    <string name="second_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
-    <string name="third_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
-    <string name="fourth_slide_desc">Lorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec liguLorem ipsum dolor sites sit amet vulputate ac, varius quis turpis. Etiam nec ligu</string>
+    <string name="first_slide_desc">Welcome to Animal Sounds, scroll to find out how the game is played.</string>
+    <string name="second_slide_desc">Press the bottom button and play the sound.</string>
+    <string name="third_slide_desc">Choose the picture of the animal you hear and score points</string>
+    <string name="fourth_slide_desc"></string>
 
     <string name="skit_btn">Skip</string>
 </resources>

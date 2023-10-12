@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "185292967331",
+    "project_id": "animalsound-e2ed9",
+    "storage_bucket": "animalsound-e2ed9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:185292967331:android:28f09caa9d94ec178ade16",
+        "android_client_info": {
+          "package_name": "com.muhittintanoba.animalsound"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDd2jkm8IPZi_qzFXRONVONUMk9V19iH3E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

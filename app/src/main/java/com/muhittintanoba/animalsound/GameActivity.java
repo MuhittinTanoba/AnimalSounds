@@ -183,9 +183,81 @@ public class GameActivity extends AppCompatActivity {
             R.drawable.woodpecker,
             R.drawable.yellowrumpedwarbler
     };
-    ImageView image1, image2, image3, image4, heartImageView, correctImage, cross1, cross2, cross3, cross4;
+    String[] animalNames = {
+            "dog",
+            "cat",
+            "bird",
+            "bear",
+            "cow",
+            "chick",
+            "donkey",
+            "duck",
+            "elephant",
+            "frog",
+            "horse",
+            "lion",
+            "pig",
+            "rooster",
+            "sheep",
+            "tiger",
+            "alligator",
+            "amazonmacaw",
+            "bee",
+            "bison",
+            "bull",
+            "canarybird",
+            "chipmunks",
+            "cows",
+            "coyote",
+            "cricket",
+            "crickets",
+            "crows",
+            "elephant",
+            "elk",
+            "finch",
+            "fox",
+            "geese",
+            "geier",
+            "goat",
+            "gorilla",
+            "grasshopper",
+            "jay",
+            "kapuzineraffe",
+            "kingcobra",
+            "lamb",
+            "lapwing",
+            "leopard",
+            "loewen",
+            "mockingbird",
+            "moewe",
+            "mosquito",
+            "nightingale",
+            "osprey",
+            "owl",
+            "peacock",
+            "pigeons",
+            "pony",
+            "puma",
+            "rattlesnake",
+            "raven",
+            "redlori",
+            "redparrot",
+            "rhinozerus",
+            "rooster",
+            "schimpanse",
+            "snowyowl",
+            "sparrow",
+            "squirrel",
+            "swallow",
+            "tawnyfrogmouth",
+            "turkey",
+            "wolf",
+            "woodpecker",
+            "yellowrumpedwarbler"
+    };
+    ImageView image1, image2, image3, image4, heartImageView, correctImage, cross1, cross2, cross3, cross4, scoreImage;
     MediaPlayer music, correctSound, wrongSound;
-    TextView scoreText, bestScoreText, healthText;
+    TextView scoreText, bestScoreText, healthText, englishNames;
     private InterstitialAd mInterstitialAd;
     List<Integer> playedSounds = new ArrayList<Integer>();
     int randomVoice, randomForFirst, randomForSecond, randomForThird, randomForFourth,
@@ -212,6 +284,9 @@ public class GameActivity extends AppCompatActivity {
         bestScoreText = (TextView) findViewById(R.id.bestScoreText);
         healthText = (TextView) findViewById(R.id.healthText);
         healthText.setText(Integer.toString(health));
+        scoreImage = findViewById(R.id.scoreImageView);
+        englishNames = (TextView) findViewById(R.id.englishNames);
+        englishNames.setVisibility(View.INVISIBLE);
 
         correctSound = MediaPlayer.create(GameActivity.this, R.raw.positive_sound);
         wrongSound = MediaPlayer.create(GameActivity.this, R.raw.negative_beeps);
@@ -231,10 +306,13 @@ public class GameActivity extends AppCompatActivity {
         cross3 = (ImageView) findViewById(R.id.cross3);
         cross4 = (ImageView) findViewById(R.id.cross4);
 
+        changeScoreImage();
+        cross4.bringToFront();
+        cross3.bringToFront();
+        cross2.bringToFront();
         cross1.bringToFront();
         changeImage();
         changeSound();
-
 
         heartBeatAnim(600,300, heartImageView);
         heartBeatAnim(600,300, healthText);
@@ -277,11 +355,12 @@ public class GameActivity extends AppCompatActivity {
         if(randomVoice == index){
             isWrongAnswer = false;
             score += 1;
+            changeScoreImage();
             scoreText.setText("Score: "+ score);
             if(bestScore<=score) {
                 bestScore = score;
                 sharedPreferences.edit().putInt("bestScore", bestScore).apply();
-                bestScoreText.setText("Score: " + bestScore);
+                bestScoreText.setText("Best: " + bestScore);
             };
 
             if(playedSounds.size() < 10){
@@ -292,6 +371,7 @@ public class GameActivity extends AppCompatActivity {
             }
             correctSound.start();
             correctMark();
+            changeEnglishNames();
 
 
             getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
@@ -306,16 +386,17 @@ public class GameActivity extends AppCompatActivity {
                     changeSound();
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
                     isWrongAnswer = true;
+                    englishNames.setVisibility(View.INVISIBLE);
                 }
             }, 3000);
 
         }else{
-            health -=1 ;
-            score = 0;
-            scoreText.setText("Score: "+ score);
+            health -= 1 ;
+            if(health == 0 ) score = 0;
             healthText.setText(Integer.toString(health));
             wrongSound.start();
             checkHeathAndShowAd();
+
         }
     }
     public boolean checkArray(int first, int second, int third, int fourth, @NonNull List<Integer> array){
@@ -359,7 +440,6 @@ public class GameActivity extends AppCompatActivity {
             });
         } else if(mClueRewardAd == null) {
             Log.d("AdmobR", "The rewarded ad wasn't ready yet.");
-            Toast.makeText(getApplicationContext(), "The rewarded ad wasn't ready yet.", Toast.LENGTH_SHORT).show();
         }
 
         if(clueLife > 0){
@@ -373,6 +453,25 @@ public class GameActivity extends AppCompatActivity {
     public void playSound(View view){
         music.start();
     }
+
+    public void changeScoreImage(){
+        if(score < 10) {
+            scoreImage.setImageResource(R.drawable.red_star_icon_original);
+        } else if (score < 20 & score >= 10) {
+            scoreImage.setImageResource(R.drawable.white_star_icon_original);
+        } else if (score >= 20) {
+            scoreImage.setImageResource(R.drawable.yellow_star_icon_original);
+        }
+    }
+
+    public void changeEnglishNames(){
+        englishNames.setVisibility(View.VISIBLE);
+        String nameOfAnimal = animalNames[randomVoice].toUpperCase();
+        englishNames.setText(nameOfAnimal);
+    }
+
+
+
     public void clickedFirstImage(View view){
         checkVoice(randomForFirst);
         if(isWrongAnswer) {
@@ -433,6 +532,14 @@ public class GameActivity extends AppCompatActivity {
                 cross4.setVisibility(View.INVISIBLE);
             }
         }, 3000);
+    }
+    public void gameOver(){
+        if(health <= 0){
+            score = 0;
+            scoreText.setText("Score: "+ score);
+
+
+        }
     }
 
 
@@ -619,7 +726,6 @@ public class GameActivity extends AppCompatActivity {
             });
         } else {
             Log.d("AdmobR", "The rewarded ad wasn't ready yet.");
-            Toast.makeText(getApplicationContext(), "The rewarded ad wasn't ready yet.", Toast.LENGTH_SHORT).show();
         }
     }
     public void loadClueRewardedAd(){

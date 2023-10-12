@@ -22,7 +22,7 @@ public class SplashActivity extends AppCompatActivity {
                 onBoardingScreen = getSharedPreferences("onBoardingScreen", MODE_PRIVATE);
                 boolean isFirstTime = onBoardingScreen.getBoolean("firstTime", true);
                 // For first time
-
+/*
                 if(isFirstTime){
 
                     SharedPreferences.Editor editor = onBoardingScreen.edit();
@@ -37,7 +37,12 @@ public class SplashActivity extends AppCompatActivity {
                     startActivity(intent);
                     finish();
                 }
+*/
 
+
+                Intent intent = new Intent(SplashActivity.this, OnBoarding.class);
+                startActivity(intent);
+                finish();
 
             }
         }, 3000);
